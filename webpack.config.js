@@ -2,7 +2,6 @@ const path = require('path')
 const webpack = require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-// const PreloadWebpackPlugin = require('preload-webpack-plugin')
 const Critters = require('critters-webpack-plugin')
 const Dotenv = require('dotenv-webpack')
 
@@ -13,16 +12,6 @@ module.exports = {
   mode: isDev ? 'development' : 'production',
   bail: isProd,
   devtool: isDev ? 'cheap-module-source-map' : false,
-
-  stats: {
-    all: false,
-    modules: true,
-    maxModules: 50,
-    errors: true,
-    warnings: true,
-    moduleTrace: true,
-    errorDetails: true,
-  },
 
   devServer: {
     contentBase: path.join(__dirname, 'build'),
@@ -80,46 +69,31 @@ module.exports = {
       chunkFilename: '[name].[id].css',
     }),
 
-    new HtmlWebpackPlugin(
-      Object.assign(
-        {},
-        {
-          inject: true,
-          template: path.resolve(__dirname, 'public', 'index.html'),
+    new HtmlWebpackPlugin({
+      inject: true,
+      template: path.resolve(__dirname, 'public', 'index.html'),
+      ...(isProd && {
+        minify: {
+          removeComments: true,
+          collapseWhitespace: true,
+          removeRedundantAttributes: true,
+          useShortDoctype: true,
+          removeEmptyAttributes: true,
+          removeStyleLinkTypeAttributes: true,
+          keepClosingSlash: true,
+          minifyJS: true,
+          minifyCSS: true,
+          minifyURLs: true,
         },
-        isProd
-          ? {
-              minify: {
-                removeComments: true,
-                collapseWhitespace: true,
-                removeRedundantAttributes: true,
-                useShortDoctype: true,
-                removeEmptyAttributes: true,
-                removeStyleLinkTypeAttributes: true,
-                keepClosingSlash: true,
-                minifyJS: true,
-                minifyCSS: true,
-                minifyURLs: true,
-              },
-            }
-          : undefined
-      )
-    ),
-  ].concat(
-    isDev
-      ? [new webpack.HotModuleReplacementPlugin()]
-      : [
-          // new PreloadWebpackPlugin({
-          //   rel: 'preload',
-          //   include: 'allAssets',
-          //   fileWhitelist: [/^main.*\.css$/],
-          // }),
-          new Critters({
-            // Outputs: <link rel="preload" onload="this.rel='stylesheet'">
-            preload: 'swap',
-            // Don't inline critical font-face rules, but preload the font URLs:
-            preloadFonts: true,
-          }),
-        ]
-  ),
+      }),
+    }),
+    isDev && new webpack.HotModuleReplacementPlugin(),
+    isProd &&
+      new Critters({
+        // Outputs: <link rel="preload" onload="this.rel='stylesheet'">
+        preload: 'swap',
+        // Don't inline critical font-face rules, but preload the font URLs:
+        preloadFonts: true,
+      }),
+  ].filter(Boolean),
 }
