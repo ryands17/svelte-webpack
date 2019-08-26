@@ -5524,10 +5524,10 @@ svelte-dev-helper@^1.1.9:
   resolved "https://registry.yarnpkg.com/svelte-dev-helper/-/svelte-dev-helper-1.1.9.tgz#7d187db5c6cdbbd64d75a32f91b8998bde3273c3"
   integrity sha1-fRh9tcbNu9ZNdaMvkbiZi94yc8M=
 
-svelte-loadable@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/svelte-loadable/-/svelte-loadable-1.0.1.tgz#52981cb12fc45adbf5b847e70d7356434b2112ff"
-  integrity sha512-vGzF8DECJJy12sLX+avnRX5eXwoq12lCVJcAe5oILVMQr8R2gWeogkMuOKASggnagRJjXCLRpV9cFc/X55Idsw==
+svelte-loadable@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/svelte-loadable/-/svelte-loadable-1.1.0.tgz#17793efb9d3e94ca5bc0a16007aa2e5cfd6246ff"
+  integrity sha512-6U493WgPxtC2bI4UZO4bMPzXiUBkxCcjCxrBWgKTMB808pSfoYan7/AF3G/NsEarw/f+dSNuN4P5fZbCPPb+cQ==
 
 svelte-loader@^2.13.4:
   version "2.13.4"

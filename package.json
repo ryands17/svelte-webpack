@@ -30,7 +30,7 @@
     "rimraf": "^3.0.0",
     "style-loader": "^1.0.0",
     "svelte": "^3.9.1",
-    "svelte-loadable": "^1.0.1",
+    "svelte-loadable": "^1.1.0",
     "svelte-loader": "^2.13.4",
     "svelte-routing": "^1.2.0",
     "webpack": "^4.33.0",
