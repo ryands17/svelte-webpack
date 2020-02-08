@@ -7,22 +7,31 @@ const Dotenv = require('dotenv-webpack')
 
 const isDev = process.env.NODE_ENV === 'development'
 const isProd = process.env.NODE_ENV === 'production'
+const stats = 'minimal'
 
 module.exports = {
   mode: isDev ? 'development' : 'production',
   bail: isProd,
-  devtool: isDev ? 'cheap-module-source-map' : false,
+  devtool: isDev ? 'cheap-module-source-map' : 'eval',
+  stats: {
+    assets: true,
+    children: false,
+  },
 
   devServer: {
     contentBase: path.join(__dirname, 'build'),
     historyApiFallback: true,
     hot: false,
     open: true,
-    stats: 'normal',
+    stats,
     port: 3000,
   },
 
   entry: ['./src/index.js'],
+
+  resolve: {
+    extensions: ['.mjs', '.js', '.json', '.svelte'],
+  },
 
   output: {
     path: path.resolve(__dirname, 'build'),
@@ -37,14 +46,23 @@ module.exports = {
     rules: [
       {
         test: /\.svelte$/,
-        // exclude: /node_modules/,
-        use: {
-          loader: 'svelte-loader',
-          options: {
-            emitCss: true,
-            hotReload: false,
+        use: [
+          {
+            loader: 'svelte-loader',
+            options: {
+              emitCss: true,
+              hotReload: false,
+            },
           },
-        },
+        ],
+      },
+      {
+        test: /\.m?js$/,
+        include: [
+          path.resolve(__dirname, 'src'),
+          path.resolve(__dirname, 'build', 'node_modules', 'svelte'),
+        ],
+        loader: 'babel-loader',
       },
       {
         test: /\.css$/,
