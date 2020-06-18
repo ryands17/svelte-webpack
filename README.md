@@ -1,29 +1,19 @@
-# New Project
+# Svelte Electron
 
-> ✨ Bootstrapped with Create Snowpack App (CSA).
+[Svelte](https://svelte.dev) + [Electron](https://electronjs.org/)
 
 ## Available Scripts
 
-### npm start
+In the project directory, you can run:
 
-Runs the app in the development mode.
-Open http://localhost:8080 to view it in the browser.
+### `yarn dev` or `npm run dev`
 
-The page will reload if you make edits.
-You will also see any lint errors in the console.
+Runs the electron app in the development mode.<br>
+The app will open automatically.
 
-### npm test
+**Note:** Linux users if you're getting an error it's likely you need to follow [this issue](https://github.com/electron/electron/issues/17972)
 
-Launches the test runner in the interactive watch mode.
-See the section about running tests for more information.
+### `yarn prod` or `npm run prod`
 
-### npm run build
-
-Builds a static copy of your site to the `build/` folder.
-Your app is ready to be deployed!
-
-**For the best production performance:** Add a build bundler plugin like "@snowpack/plugin-webpack" or "@snowpack/plugin-parcel" to your `snowpack.config.json` config file.
-
-### Q: What about Eject?
-
-No eject needed! Snowpack guarantees zero lock-in, and CSA strives for the same.
+Builds the app via electron builder (Currently only for Linux. Change the setting as per the OS).<br>
+Currently it doesn't work due to an issue in Snowpack.

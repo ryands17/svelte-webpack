@@ -1,4 +1,8 @@
 .build
-build
+build/
+dist/
+
+# misc.
 web_modules
 node_modules
+coverage/
