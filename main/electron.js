@@ -1,11 +1,14 @@
-const { app, BrowserWindow, protocol } = require('electron')
+const { app, BrowserWindow } = require('electron')
 const path = require('path')
-const url = require('url')
+const { spawn } = require('child_process')
+const waitOn = require('wait-on')
 const isDev = require('electron-is-dev')
 
+const PROD_SERVER = 'http://127.0.0.1:3000'
 let mainWindow
+let server
 
-function createWindow() {
+async function createWindow() {
   // let screenElectron = electron.screen;
   // let mainScreen = screenElectron.getPrimaryDisplay();
   // let dimensions = mainScreen.size;
@@ -19,29 +22,31 @@ function createWindow() {
   })
 
   mainWindow.setMinimumSize(1364, 768)
-  mainWindow.loadURL(
-    isDev
-      ? 'http://localhost:8080'
-      : url.format({
-          pathname: path.join(__dirname, '..', 'build', 'index.html'),
-          protocol: 'file:',
-          slashes: true,
-        })
-  )
-  // isDev && mainWindow.webContents.openDevTools()
-  mainWindow.webContents.openDevTools()
+  if (isDev) {
+    mainWindow.loadURL('http://localhost:8080')
+  } else {
+    try {
+      server = startServer()
+      await waitForServer()
+      mainWindow.loadURL(PROD_SERVER)
+    } catch (e) {
+      console.log('e', e)
+    }
+  }
+
+  isDev && mainWindow.webContents.openDevTools()
   mainWindow.on('closed', () => {
     return (mainWindow = null)
   })
 }
 
-app.on('ready', () => {
-  createWindow()
+app.on('ready', async () => {
+  await createWindow()
 })
 
-app.on('activate', () => {
+app.on('activate', async () => {
   if (mainWindow === null) {
-    createWindow()
+    await createWindow()
   }
 })
 
@@ -50,3 +55,30 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
+
+app.on('before-quit', () => {
+  server && server.kill()
+})
+
+function startServer() {
+  let dir = path.join(__dirname, 'server.js')
+  const server = spawn('node', [dir])
+  server.stdout.on('data', data => {
+    console.log('stdout', data.toString('ascii'))
+  })
+
+  server.stderr.on('data', data => {
+    console.log('stderr', data.toString('ascii'))
+  })
+
+  server.stdin.on('data', data => {
+    console.log('stdin', data.toString('ascii'))
+  })
+  return server
+}
+
+function waitForServer() {
+  return waitOn({
+    resources: [PROD_SERVER],
+  })
+}
